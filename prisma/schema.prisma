@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Patient {
+  id               Int       @id @default(autoincrement())
+  name             String
+  diseases         String
+  allergies        String
+  roomNumber       Int
+  bedNumber        Int
+  floorNumber      Int
+  age              Int
+  gender           String
+  contactInfo      String
+  emergencyContact String
+  dietaryNotes     String?   // Optional additional details
+  dietCharts       DietChart[]
+}
+
+model DietChart {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  mealType    MealType
+  ingredients String[]
+  instructions String? // Optional instructions (e.g., "low salt")
+  createdAt   DateTime @default(now())
+  Task Task[]
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+model staff {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String
+  contactInfo String
+  email       String @unique
+  password    String
+  tasks       Task[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  staffId     Int
+  staff       staff    @relation(fields: [staffId], references: [id])
+  dietChartId Int
+  dietChart   DietChart @relation(fields: [dietChartId], references: [id])
+  status      TaskStatus
+  type    TaskType
+  createdAt   DateTime @default(now())
+}
+
+enum TaskType {
+  DELIVERY
+  DIET_CHART
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
