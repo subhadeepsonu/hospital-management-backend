@@ -1,11 +1,14 @@
 import { Router } from "express";
-import { createDelivary, deleteDelivary, getDelivary, getDelivaryById, updateDelivary } from "../controllers/delivary.controller";
+import { getDelivary, getDelivaryById, getTask, updateTask } from "../controllers/delivary.controller";
+import { delivaryMiddleware } from "../middleware/delivary.middleware";
+import { managerMiddleware } from "../middleware/manager.middleware";
+
 const delivaryRouter = Router();
 
-delivaryRouter.get("/delivary/:id", getDelivaryById)
-delivaryRouter.get("/delivary", getDelivary)
-delivaryRouter.post("/delivary", createDelivary)
-delivaryRouter.put("/delivary", updateDelivary)
-delivaryRouter.delete("/delivary", deleteDelivary)
+
+delivaryRouter.get("/", managerMiddleware, getDelivary)
+delivaryRouter.get("/gettask", delivaryMiddleware, getTask)
+delivaryRouter.put("/updatetask/:id", delivaryMiddleware, updateTask)
+delivaryRouter.get("/:id", managerMiddleware, getDelivaryById)
 
 export default delivaryRouter;

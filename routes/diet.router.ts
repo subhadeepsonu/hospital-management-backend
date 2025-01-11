@@ -1,16 +1,19 @@
 import { Router } from "express";
 import { createDietPlan, deleteDietPlan, getDietPlanById, getDietPlans, updateDietPlan } from "../controllers/diet.controller";
+import { managerMiddleware } from "../middleware/manager.middleware";
+import { pantryMiddleware } from "../middleware/pantry.middleware";
 
 const dietRouter = Router();
 dietRouter.get("/", (req, res) => {
     res.send("Hello World!");
 }
 );
-dietRouter.post("/dietplan", createDietPlan)
-dietRouter.get("/dietplan/:id", getDietPlanById)
-dietRouter.get("/dietplan", getDietPlans)
-dietRouter.put("/dietplan", updateDietPlan)
-dietRouter.delete("/dietplan", deleteDietPlan)
+
+dietRouter.get("/", pantryMiddleware, getDietPlans)
+dietRouter.post("/", managerMiddleware, createDietPlan)
+dietRouter.put("/", managerMiddleware, updateDietPlan)
+dietRouter.delete("/", managerMiddleware, deleteDietPlan)
+dietRouter.get("/:id", pantryMiddleware, getDietPlanById)
 
 
 export default dietRouter;

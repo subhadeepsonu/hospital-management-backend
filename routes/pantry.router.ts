@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { createPantry, deletePantry, getPantry, getPantryById, updatePantry } from "../controllers/pantry.controller";
+import { getPantry, getPantryById, getTask, updateTask } from "../controllers/pantry.controller";
+import { pantryMiddleware } from "../middleware/pantry.middleware";
+import { managerMiddleware } from "../middleware/manager.middleware";
 const pantryRouter = Router();
-pantryRouter.get("/", (req, res) => {
-    res.send("Hello World!");
-});
-pantryRouter.get("/pantry/:id", getPantryById)
-pantryRouter.get("/pantry", getPantry)
-pantryRouter.post("/pantry", createPantry)
-pantryRouter.put("/pantry", updatePantry)
-pantryRouter.delete("/pantry", deletePantry)
+
+pantryRouter.get("/", managerMiddleware, getPantry)
+pantryRouter.get("/gettask", pantryMiddleware, getTask)
+pantryRouter.put("/updatetask/:id", pantryMiddleware, updateTask)
+pantryRouter.get("/:id", managerMiddleware, getPantryById)
 export default pantryRouter;

@@ -8,11 +8,19 @@ import { loginSchema } from "./validators/manager.validator";
 import { prisma } from "./db";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import cors from "cors";
 const app = express();
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-});
 app.use(express.json());
+app.use(cors({
+    origin: "*"
+}));
+app.get("/", (req, res) => {
+    res.json({
+        success: true,
+        message: "Welcome to the hospital management system"
+    })
+});
+
 app.post("/login", async (req, res) => {
     const body = req.body;
     const check = loginSchema.safeParse(body);
@@ -43,7 +51,7 @@ app.post("/login", async (req, res) => {
         })
         return
     }
-    const token = jwt.sign({ id: user.id, role: user.role }, "secret")
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET!)
     res.json({
         success: true,
         message: token
@@ -54,6 +62,7 @@ app.use("/delivary", delivaryRouter)
 app.use("/pantry", pantryRouter)
 app.use("/diet", dietRouter)
 app.use('/manager', managerRouter)
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
