@@ -12,7 +12,9 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: "https://hospital-management-frontend-psi.vercel.app"
+    origin: "https://hospital-management-frontend-psi.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
 }));
 app.get("/", (req, res) => {
     res.json({
