@@ -12,7 +12,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: "*"
+    origin: "https://hospital-management-frontend-psi.vercel.app"
 }));
 app.get("/", (req, res) => {
     res.json({
@@ -63,6 +63,6 @@ app.use("/pantry", pantryRouter)
 app.use("/diet", dietRouter)
 app.use('/manager', managerRouter)
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+app.listen(4000, () => {
+    console.log("Server is running on port 4000");
 });
